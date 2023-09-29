@@ -104,8 +104,6 @@ while True:
         movimientos += 1
         puntaje -= 1
     
-    print('plsss')
-
     if(velocidad == 0):
         velocidad = 0.4
     time.sleep(3)

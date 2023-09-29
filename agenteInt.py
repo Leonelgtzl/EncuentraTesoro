@@ -19,12 +19,12 @@ class Agentes:
             print('Puntaje:', puntaje)
 
         if len(self.historial) == 0:
-            print('Posicion:', self.posicion)
+            print('Posicion:', (self.posicion[0]-5)*-1, ', ',(self.posicion[1]+1)) 
         else:
             posicion_anterior = self.historial[len(self.historial)-1] if len(self.historial) > 0 else self.posicion
-            print('Posición anterior:', posicion_anterior)
+            print('Posición anterior:', (posicion_anterior[0]-5)*-1, ', ', posicion_anterior[1]+1)
         
-        print('Posicion actual: ', self.posicion)
+        print('Posicion actual: ', (self.posicion[0]-5)*-1, ', ',(self.posicion[1]+1))
 
         self.historial.append(self.posicion) 
 
@@ -37,7 +37,11 @@ class Agentes:
             print('\n')
 
         for key, valor in self.objeto_encontrado.items():
-            print(key, ':', valor, end=' || ')
+            if valor == 'X':
+                print(key, ':', valor, end=' || ')
+            else:
+                valor_juego = (valor[0]-5) *-1, valor[1] + 1
+                print(key, ':', valor_juego, end=' || ')
 
 
 #SENSORES
@@ -67,12 +71,13 @@ class Agentes:
     def encontrar_objeto(self, nombre_objeto, posx, posy):
         match nombre_objeto:
             case "A":
-                self.objeto_encontrado ['agI'] = posx,posy
+                
                 if self.nombre == 'agI':
                     pass
                 else:
                     if self.objeto_encontrado['agI'] != 'X':
                         self.memoria_agente[self.objeto_encontrado['agI'][0]][self.objeto_encontrado['agI'][1]] = 1
+                        self.objeto_encontrado ['agI'] = posx,posy
                 return 'agI'
 
             case "G":
@@ -82,6 +87,7 @@ class Agentes:
                 else:
                     if self.objeto_encontrado['gumpy'] != 'X':
                         self.memoria_agente[self.objeto_encontrado['gumpy'][0]][self.objeto_encontrado['gumpy'][1]] = 1
+                        self.objeto_encontrado ['agI'] = posx,posy
                 return 'gumpy'
 
             case "P1":
@@ -161,7 +167,7 @@ class Agentes:
                         if self.memoria_agente[n_x][n_y] == 0:
                             new_x, new_y = n_x, n_y 
                             continue
-                        elif self.memoria_agente[n_x][n_y] == 1:
+                        else:
                             new_x, new_y = n_x, n_y 
                             continue
 
