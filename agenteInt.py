@@ -115,6 +115,37 @@ class Agentes:
 
                 elif self.nombre == 'agI':
                     inicial = 'A'
+
+                    #Esto se supone que hace que el agente inteligente huya del gumpy
+                    #pero el problema es que puee intentar verficar fuera del rango y lanza un error
+                    
+                    """
+                    if tablero[n_x -1][n_y +1] == 'G':
+                        new_x, new_y = n_x +1, n_y
+                        continue
+                    elif tablero[n_x][n_y+1] == 'G':
+                        new_x, new_y = n_x+1|n_x-1, n_y
+                        continue
+                    elif tablero[n_x+1][n_y+1] == 'G':
+                        new_x, new_y = n_x-1, n_y
+                        continue
+                    elif tablero[n_x-1][n_y] == 'G':
+                        new_x, new_y = n_x+1, n_y
+                        continue
+                    elif tablero[n_x+1][n_y] == 'G':
+                        new_x, new_y = n_x-1, n_y
+                        continue
+                    elif tablero[n_x-1][n_y-1] == 'G':
+                        new_x, new_y = n_x, n_y+1
+                        continue
+                    elif tablero[n_x][n_y-1] == 'G':
+                        new_x, new_y = n_x, n_y+1
+                        continue
+                    elif tablero[n_x+1][n_y-1] == 'G':
+                        new_x, new_y = n_x, n_y+1
+                        continue
+                    """
+
                     if tablero[n_x][n_y] == 'T':
                         new_x, new_y = n_x, n_y 
                         break
