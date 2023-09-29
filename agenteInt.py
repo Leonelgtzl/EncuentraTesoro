@@ -116,40 +116,17 @@ class Agentes:
                 elif self.nombre == 'agI':
                     inicial = 'A'
 
-                    #Esto se supone que hace que el agente inteligente huya del gumpy
-                    #pero el problema es que puee intentar verficar fuera del rango y lanza un error
-                    
-                    """
-                    if tablero[n_x -1][n_y +1] == 'G':
-                        new_x, new_y = n_x +1, n_y
-                        continue
-                    elif tablero[n_x][n_y+1] == 'G':
-                        new_x, new_y = n_x+1|n_x-1, n_y
-                        continue
-                    elif tablero[n_x+1][n_y+1] == 'G':
-                        new_x, new_y = n_x-1, n_y
-                        continue
-                    elif tablero[n_x-1][n_y] == 'G':
-                        new_x, new_y = n_x+1, n_y
-                        continue
-                    elif tablero[n_x+1][n_y] == 'G':
-                        new_x, new_y = n_x-1, n_y
-                        continue
-                    elif tablero[n_x-1][n_y-1] == 'G':
-                        new_x, new_y = n_x, n_y+1
-                        continue
-                    elif tablero[n_x][n_y-1] == 'G':
-                        new_x, new_y = n_x, n_y+1
-                        continue
-                    elif tablero[n_x+1][n_y-1] == 'G':
-                        new_x, new_y = n_x, n_y+1
-                        continue
-                    """
-
-                    if tablero[n_x][n_y] == 'T':
-                        new_x, new_y = n_x, n_y 
+                    tes = EO(self.memoria_agente,"tesoro")
+                    if tes[0]==n_x|tes[1]==n_y:
+                        new_x, new_y = tes[0], tes[1]
                         break
-                    elif tablero[n_x][n_y] == ' ':
+
+                    
+                    
+                    """if tablero[n_x][n_y] == 'T':
+                        new_x, new_y = n_x, n_y 
+                        break"""
+                    if tablero[n_x][n_y] == ' ':
                         if self.memoria_agente[n_x][n_y] == 0:
                             new_x, new_y = n_x, n_y 
                             continue
@@ -165,3 +142,11 @@ class Agentes:
 
 def is_valid(x, y):
     return 0 <= x < 5 and 0 <= y < 5
+
+def EO(matriz, objeto_buscado):
+    for fila in range(len(matriz)):
+        for columna in range(len(matriz[fila])):
+            if matriz[fila][columna] == objeto_buscado:
+                print("encontrado")
+                return fila, columna  # Devuelve la posición donde se encontró el objeto
+    return None
