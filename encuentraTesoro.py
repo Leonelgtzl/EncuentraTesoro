@@ -1,7 +1,9 @@
+import os
 import keyboard
 import time
 from agenteInt import Agentes
 from juego import Juego
+
 
 global juego
 global agI 
@@ -65,18 +67,16 @@ while True:
 
     
     if juego != 0:
-        print('ppp')
+        
         if movimientos == 0:
             inicio = True 
         else:
             inicio = False
-            print('prueba1')
             tablero = agI.mover_agente(juego.tablero)
             if movimientos % 2 == 0:
-                print('prueba2')
                 tablero = gumpy.mover_agente(juego.tablero)
-            
-        juego.imprimir_tablero()
+
+        juego.imprimir_tablero()  
 
         print(agI.mostrar_stats(juego.tablero, inicio, puntaje))
         print(gumpy.mostrar_stats(juego.tablero, inicio, puntaje))
@@ -87,7 +87,8 @@ while True:
             puntaje += 1000
             juego.tablero = [[' ' for _ in range(5)] for _ in range(5)]
             juego.posicionar_objetos()
-            #falta poner que cuando gane pueda seguir jugando con su puntaje
+            juego.tablero[4][0] = 'A'
+            agI = Agentes('agI', [4,0])
             mostrar_menu()
         
         # Verificar si el gumpy atrapó al agente
@@ -103,8 +104,11 @@ while True:
         print(f'Intentos: {intentos} \nMovimientos {movimientos} \nPuntaje: {puntaje}')
         movimientos += 1
         puntaje -= 1
+    
+    print('plsss')
 
     if(velocidad == 0):
         velocidad = 0.4
-    time.sleep(velocidad)
-    
+    time.sleep(3)
+    os.system('cls')
+

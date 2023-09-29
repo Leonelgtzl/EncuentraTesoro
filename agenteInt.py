@@ -1,3 +1,4 @@
+import os
 import random
 
 #AGENTES
@@ -38,6 +39,7 @@ class Agentes:
         for key, valor in self.objeto_encontrado.items():
             print(key, ':', valor, end=' || ')
 
+
 #SENSORES
     def sensores(self, tablero, inicio):
         if inicio:
@@ -65,15 +67,21 @@ class Agentes:
     def encontrar_objeto(self, nombre_objeto, posx, posy):
         match nombre_objeto:
             case "A":
-                if self.objeto_encontrado ['agI'] != 'X':
-                    self.memoria_agente[self.objeto_encontrado['agI'][0]][self.objeto_encontrado['agI'][1]] = 1
                 self.objeto_encontrado ['agI'] = posx,posy
+                if self.nombre == 'agI':
+                    pass
+                else:
+                    if self.objeto_encontrado['agI'] != 'X':
+                        self.memoria_agente[self.objeto_encontrado['agI'][0]][self.objeto_encontrado['agI'][1]] = 1
                 return 'agI'
 
             case "G":
-                if self.objeto_encontrado ['gumpy'] != 'X':
-                    self.memoria_agente[self.objeto_encontrado['gumpy'][0]][self.objeto_encontrado['gumpy'][1]] = 1
                 self.objeto_encontrado['gumpy'] = posx,posy
+                if self.nombre == 'gumpy':
+                    pass
+                else:
+                    if self.objeto_encontrado['gumpy'] != 'X':
+                        self.memoria_agente[self.objeto_encontrado['gumpy'][0]][self.objeto_encontrado['gumpy'][1]] = 1
                 return 'gumpy'
 
             case "P1":
@@ -116,16 +124,47 @@ class Agentes:
                 elif self.nombre == 'agI':
                     inicial = 'A'
 
+
+
                     tes = EO(self.memoria_agente,"tesoro")
                     if tes[0]==n_x|tes[1]==n_y:
                         new_x, new_y = tes[0], tes[1]
-                        break
+
+                    #Esto se supone que hace que el agente inteligente huya del gumpy
+                    #pero el problema es que puee intentar verficar fuera del rango y lanza un error
+
+                    """
+                    if tablero[n_x -1][n_y +1] == 'G':
+                        new_x, new_y = n_x +1, n_y
+                        continue
+                    elif tablero[n_x][n_y+1] == 'G':
+                        new_x, new_y = n_x+1|n_x-1, n_y
+                        continue
+                    elif tablero[n_x+1][n_y+1] == 'G':
+                        new_x, new_y = n_x-1, n_y
+                        continue
+                    elif tablero[n_x-1][n_y] == 'G':
+                        new_x, new_y = n_x+1, n_y
+                        continue
+                    elif tablero[n_x+1][n_y] == 'G':
+                        new_x, new_y = n_x-1, n_y
+                        continue
+                    elif tablero[n_x-1][n_y-1] == 'G':
+                        new_x, new_y = n_x, n_y+1
+                        continue
+                    elif tablero[n_x][n_y-1] == 'G':
+                        new_x, new_y = n_x, n_y+1
+                        continue
+                    elif tablero[n_x+1][n_y-1] == 'G':
+                        new_x, new_y = n_x, n_y+1
+                        continue
+                    """
+
 
                     
-                    
-                    """if tablero[n_x][n_y] == 'T':
-                        new_x, new_y = n_x, n_y 
-                        break"""
+
+                        
+
                     if tablero[n_x][n_y] == ' ':
                         if self.memoria_agente[n_x][n_y] == 0:
                             new_x, new_y = n_x, n_y 
