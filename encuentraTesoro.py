@@ -99,6 +99,7 @@ while True:
             movimientos = -1
             agI = Agentes('agI', [4,0])
             gumpy = Agentes('gumpy', juego.gumpy)
+            mostrar_menu()
         
         print(f'Intentos: {intentos} \nMovimientos {movimientos} \nPuntaje: {puntaje}')
         movimientos += 1
