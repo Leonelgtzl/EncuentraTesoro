@@ -11,6 +11,11 @@ class Agentes:
         self.historial = []
         self.objeto_encontrado = {'tesoro' : 'X', 'pozo1' : 'X', 'pozo2' : 'X', 'gumpy' : 'X', 'agI' : 'X'}
 
+    def reiniciar_memoria(self):
+        self.memoria_agente = [[0 for _ in range(5)] for _ in range(5)]
+        self.historial = []
+        self.objeto_encontrado = {'tesoro' : 'X', 'pozo1' : 'X', 'pozo2' : 'X', 'gumpy' : 'X', 'agI' : 'X'}
+
     def mostrar_stats(self, tablero, inicio, puntaje):
         #Con esto iremos mostrando las stats de cada agente
         print('Stats de:', self.nombre)
@@ -71,7 +76,6 @@ class Agentes:
     def encontrar_objeto(self, nombre_objeto, posx, posy):
         match nombre_objeto:
             case "A":
-                
                 if self.nombre == 'agI':
                     pass
                 else:
@@ -109,73 +113,269 @@ class Agentes:
         random.shuffle(directions)
         new_x = -1
         new_y = -1
+        posicion = 0
 
-        for dx, dy in directions:
-            n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
-            #poner lo de gumpy y agi
-            if is_valid(n_x, n_y):
-                if self.nombre == 'gumpy':
-                    inicial = 'G'
-                    if tablero[n_x][n_y] == 'A':
+        if self.nombre == 'gumpy':
+            inicial = 'G'
+        elif self.nombre == 'agI':
+            inicial = 'A'
+
+        if self.busqueda_agente() == ' ':
+            for dx, dy in directions:
+                n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                if is_valid(n_x, n_y):
+                    if tablero[n_x][n_y] == 'A' or tablero[n_x][n_y] == 'T' :
                         new_x, new_y = n_x, n_y 
                         break
                     elif tablero[n_x][n_y] == ' ':
                         if self.memoria_agente[n_x][n_y] == 0:
                             new_x, new_y = n_x, n_y 
                             continue
-                        elif self.memoria_agente[n_x][n_y] == 1:
+                        elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
                             new_x, new_y = n_x, n_y 
-                            continue
+        else:
+            posicion = self.busqueda_agente()
 
-                elif self.nombre == 'agI':
-                    inicial = 'A'
+            dir_horizontal = [(0, 1), (0, -1)]
+            random.shuffle(dir_horizontal)
+            dir_vertical = [(1, 0), (-1, 0)]
+            random.shuffle(dir_vertical)
 
-                    #Esto se supone que hace que el agente inteligente huya del gumpy
-                    #pero el problema es que puee intentar verficar fuera del rango y lanza un error
+            dir_ai = [(0, 1), (1, 0)]
+            dir_ad = [(0, -1), (1, 0)]
+            dir_bi = [(-1, 0), (0, 1)]
+            dir_bd = [(-1, 0), (0, -1)]
 
-                    """
-                    if tablero[n_x -1][n_y +1] == 'G':
-                        new_x, new_y = n_x +1, n_y
-                        continue
-                    elif tablero[n_x][n_y+1] == 'G':
-                        new_x, new_y = n_x+1|n_x-1, n_y
-                        continue
-                    elif tablero[n_x+1][n_y+1] == 'G':
-                        new_x, new_y = n_x-1, n_y
-                        continue
-                    elif tablero[n_x-1][n_y] == 'G':
-                        new_x, new_y = n_x+1, n_y
-                        continue
-                    elif tablero[n_x+1][n_y] == 'G':
-                        new_x, new_y = n_x-1, n_y
-                        continue
-                    elif tablero[n_x-1][n_y-1] == 'G':
-                        new_x, new_y = n_x, n_y+1
-                        continue
-                    elif tablero[n_x][n_y-1] == 'G':
-                        new_x, new_y = n_x, n_y+1
-                        continue
-                    elif tablero[n_x+1][n_y-1] == 'G':
-                        new_x, new_y = n_x, n_y+1
-                        continue
-                    """
+            print('Posicion agente:', posicion)
+            if self.nombre == 'agI':
+                if posicion == 'A':
+                    if  self.posicion[0] + 1 < 5:
+                        new_x, new_y = self.posicion[0]+1, self.posicion[1] 
+                        pass
+                    else:
+                        for dx, dy in dir_horizontal:
+                            n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
 
-                    if tablero[n_x][n_y] == 'T':
-                        new_x, new_y = n_x, n_y 
-                        break
-                    elif tablero[n_x][n_y] == ' ':
-                        if self.memoria_agente[n_x][n_y] == 0:
-                            new_x, new_y = n_x, n_y 
-                            continue
-                        else:
-                            new_x, new_y = n_x, n_y 
-                            continue
+                            if is_valid(n_x, n_y):
+                                if tablero[n_x][n_y] == ' ':
+                                    if self.memoria_agente[n_x][n_y] == 0:
+                                        new_x, new_y = n_x, n_y 
+                                        break
+                                    elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                        new_x, new_y = n_x, n_y 
+
+                elif posicion == 'B':
+                    if  self.posicion[0] - 1 >= 0:
+                        new_x, new_y = self.posicion[0]-1, self.posicion[1]  
+                        pass
+                    else:
+                        for dx, dy in dir_horizontal:
+                            n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                            if is_valid(n_x, n_y):
+                                if tablero[n_x][n_y] == ' ':
+                                    if self.memoria_agente[n_x][n_y] == 0:
+                                        new_x, new_y = n_x, n_y 
+                                        break
+                                    elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                        new_x, new_y = n_x, n_y 
+                    
+                elif posicion == 'D':
+                    if  self.posicion[1] - 1 >= 0:
+                        new_x, new_y = self.posicion[0], self.posicion[1]-1 
+                        pass
+                    else:
+                        for dx, dy in dir_vertical:
+                            n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                            if is_valid(n_x, n_y):
+                                if tablero[n_x][n_y] == ' ':
+                                    if self.memoria_agente[n_x][n_y] == 0:
+                                        new_x, new_y = n_x, n_y 
+                                        break
+                                    elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                        new_x, new_y = n_x, n_y 
+
+                elif posicion == 'I':
+                    if  self.posicion[1] + 1 < 5:
+                        new_x, new_y = self.posicion[0], self.posicion[1]+1 
+                        pass
+                    else:
+                        for dx, dy in dir_vertical:
+                            n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                            if is_valid(n_x, n_y):
+                                if tablero[n_x][n_y] == ' ':
+                                    if self.memoria_agente[n_x][n_y] == 0:
+                                        new_x, new_y = n_x, n_y 
+                                        break
+                                    elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                        new_x, new_y = n_x, n_y 
+
+                elif posicion == 'AD':
+                    for dx, dy in dir_ad:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
+                    
+                elif posicion == 'AI':
+                    for dx, dy in dir_ai:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
+
+                elif posicion == 'BD':
+                    for dx, dy in dir_bd:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
+
+                elif posicion == 'BI':
+                    for dx, dy in dir_bi:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
+
+            elif self.nombre == 'gumpy':
+                if posicion == 'A':
+                    new_x, new_y = self.posicion[0]-1, self.posicion[1] 
+                        
+
+                elif posicion == 'B':
+                    new_x, new_y = self.posicion[0]+1, self.posicion[1]
+                    
+                elif posicion == 'D':
+                    new_x, new_y = self.posicion[0], self.posicion[1]+1  
+
+                elif posicion == 'I':
+                    new_x, new_y = self.posicion[0], self.posicion[1]-1 
+
+                elif posicion == 'AD':
+                    for dx, dy in dir_bi:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
+                    
+                elif posicion == 'AI':
+                    for dx, dy in dir_bd:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
+
+                elif posicion == 'BD':
+                    for dx, dy in dir_ai:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
+
+                elif posicion == 'BI':
+                    for dx, dy in dir_ad:
+                        n_x, n_y = self.posicion[0] + dx, self.posicion[1] + dy
+
+                        if is_valid(n_x, n_y):
+                            if tablero[n_x][n_y] == ' ':
+                                if self.memoria_agente[n_x][n_y] == 0:
+                                    new_x, new_y = n_x, n_y 
+                                    break
+                                elif self.memoria_agente[n_x][n_y] == 1 and new_x == -1 :
+                                    new_x, new_y = n_x, n_y 
 
         self.memoria_agente[self.posicion[0]][self.posicion[1]] = 1
+
         tablero[self.posicion[0]][self.posicion[1]] = ' '
+
         self.posicion = new_x, new_y
+
         tablero[self.posicion[0]][self.posicion[1]] = inicial 
+
         return tablero
+    
+    def busqueda_agente(self):
+        esquina = ' '
+        #Esto debe de suceder después de usar los sensores y actualizar la memoria del agente
+        for x in range(5):
+            if int(self.posicion[0]) - x  >= -1 and int(self.posicion[0]) - x <= 1:
+
+                for y in range(5):
+                    if self.posicion[1] - y  >= -1 and self.posicion[1] - y <= 1:
+
+                        if self.memoria_agente[x][y] == 'G':
+                           
+                            #Posiciones de fila (Arriba o aBajo)
+                            if x == self.posicion[0]-1:
+                                esquina = 'A'
+                            elif x == self.posicion[0]+1:
+                                esquina = 'B'
+
+                            #Posiciones de columna (Derecha o Izquierda)
+                            if y == self.posicion[1]-1:
+                                esquina += 'I'
+                            elif y == self.posicion[1]+1:
+                                esquina += 'D'
+
+                            return esquina
+
+                        if self.memoria_agente[x][y] == 'A':
+                            esquina = ' '
+                            #Posiciones de fila (Arriba o aBajo)
+                            if x == self.posicion[0]-1:
+                                esquina = 'A'
+                            elif x == self.posicion[0]+1:
+                                esquina = 'B'
+
+                            #Posiciones de columna (Derecha o Izquierda)
+                            if y == self.posicion[1]-1:
+                                esquina += 'I'
+                            elif y == self.posicion[1]+1:
+                                esquina += 'D' 
+                            
+                            return esquina
+
+        return esquina
 
 def is_valid(x, y):
     return 0 <= x < 5 and 0 <= y < 5
+

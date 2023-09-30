@@ -4,7 +4,6 @@ import time
 from agenteInt import Agentes
 from juego import Juego
 
-
 global juego
 global agI 
 juego = 0
@@ -16,15 +15,22 @@ tablero = [[' ' for _ in range(5)] for _ in range(5)]
 velocidad = 0.2
 
 def nuevo_juego():
-    tablero = [[' ' for _ in range(5)] for _ in range(5)]
     global juego
-    juego = Juego(tablero)
+    if juego == 0:
+        juego = Juego(tablero)
+        juego.tablero[4][0] = 'A'
+    else:
+        juego.reiniciar_juego()
+
     global agI 
     agI = Agentes('agI', [4,0])
+
     global gumpy 
     gumpy = Agentes('gumpy', juego.gumpy)
+
     global tesoro
     tesoro = juego.tesoro
+
     print('Ingrese la velocidad de turno(0 = alto, 1 = medio y 2 = bajo):')
     global velocidad
     velocidad = 3
@@ -47,6 +53,8 @@ def mostrar_menu():
                     print('No tiene ningún juego comenzado.')
                     opcion = 0
                 else:
+                    if puntaje < -500 or puntaje > 500:
+                        juego.reiniciar_juego()
                     juego.imprimir_tablero()
 
             case "2":
@@ -64,7 +72,6 @@ while True:
     #En caso de que no hayamos elegido una opción válida o hayamos puesto pausa, entonces mostraremos el menu
     if opcion == 0 or keyboard.is_pressed('p'):
         mostrar_menu()
-
     
     if juego != 0:
         
@@ -85,20 +92,23 @@ while True:
         if (agI.posicion) == (tesoro):
             print("¡El agente ha encontrado el tesoro y ha ganado!")
             puntaje += 1000
-            juego.tablero = [[' ' for _ in range(5)] for _ in range(5)]
-            juego.posicionar_objetos()
-            juego.tablero[4][0] = 'A'
             agI = Agentes('agI', [4,0])
+            gumpy = Agentes('gumpy', juego.gumpy)
+            agI.reiniciar_memoria()
+            gumpy.reiniciar_memoria()
             mostrar_menu()
         
         # Verificar si el gumpy atrapó al agente
         if (agI.posicion) == (gumpy.posicion):
             print("¡El agente ha sido atrapado por el gumpy y ha perdido!")
             puntaje -= 1000
-            intentos -= 1
+            intentos += 1
             movimientos = -1
             agI = Agentes('agI', [4,0])
             gumpy = Agentes('gumpy', juego.gumpy)
+            agI.reiniciar_memoria()
+            gumpy.reiniciar_memoria()
+            mostrar_menu()
         
         print(f'Intentos: {intentos} \nMovimientos {movimientos} \nPuntaje: {puntaje}')
         movimientos += 1
@@ -106,6 +116,6 @@ while True:
     
     if(velocidad == 0):
         velocidad = 0.4
-    time.sleep(3)
+    time.sleep(velocidad)
     os.system('cls')
 

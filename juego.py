@@ -1,4 +1,3 @@
-import os
 import random
 
 #ENTORNO
@@ -11,6 +10,12 @@ class Juego:
         self.gumpy = self.posicionar_objetos() 
         self.tesoro = tesoro
         
+    def reiniciar_juego(self):
+        self.tablero = [[' ' for _ in range(5)] for _ in range(5)]
+        self.tablero[4][0] = 'A'
+        self.gumpy = self.posicionar_objetos() 
+        self.tesoro = tesoro
+
     # Función para imprimir el tablero
     def imprimir_tablero(self):
         print('\n' * 3)
@@ -21,6 +26,7 @@ class Juego:
         
 
     def posicionar_objetos(self):
+        self.tablero = [[' ' for _ in range(5)] for _ in range(5)]
         objetos = {'P1', 'P2', 'T', 'G'}
         gumpy = 0,0
         # Se colocan los objetos aleatoriamente en el tablero (excepto en [1,1] y sin repetir coords)
